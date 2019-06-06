@@ -1,0 +1,6 @@
+{
+  "name": "test-nonhttp-fn",
+  "function": {
+    "type": "non-http"
+  }
+}

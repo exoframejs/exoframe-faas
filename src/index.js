@@ -88,19 +88,19 @@ exports.registerFunction = async ({faasFolder, folder}) => {
     return;
   }
 
-  throw new Error(`Unknown function type! Couldn't register ${functions[config.route]}!`);
+  // Unknown function type! Ignoring it..
 };
 
 const loadFunctions = faasFolder => {
   const folders = fs.readdirSync(faasFolder);
   for (const folder of folders) {
-    exports.registerFunction(folder);
+    exports.registerFunction({faasFolder, folder});
   }
 };
 
-exports.setup = config => {
+exports.setup = ({faasFolder}) => {
   // load current functions
-  loadFunctions(config.faasFolder);
+  loadFunctions(faasFolder);
   // return new fastify middleware
   return (fastify, opts, next) => {
     // http handler

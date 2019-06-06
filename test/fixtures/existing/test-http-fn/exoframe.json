@@ -1,0 +1,6 @@
+{
+  "name": "test-http-fn",
+  "function": {
+    "route": "/test"
+  }
+}

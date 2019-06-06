@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should get logs for function 1`] = `
+Array [
+  "test log",
+  "other log",
+]
+`;

@@ -1,0 +1,6 @@
+{
+  "name": "test-worker-fn",
+  "function": {
+    "type": "worker"
+  }
+}
