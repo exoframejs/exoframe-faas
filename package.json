@@ -1,0 +1,20 @@
+{
+  "name": "exoframe-faas",
+  "version": "0.1.0",
+  "description": "Simple function deployments for Exoframe",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Tim Ermilov <yamalight@gmail.com> (http://codezen.net)",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^8.0.1",
+    "rimraf": "^2.6.3"
+  },
+  "devDependencies": {
+    "fastify": "^2.4.1",
+    "jest": "^24.8.0"
+  }
+}
