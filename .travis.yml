@@ -1,0 +1,8 @@
+language: node_js
+
+node_js: lts/dubnium
+
+cache: yarn
+
+after_success:
+  - yarn coveralls
