@@ -2,8 +2,8 @@
 
 > Simple function deployments for Exoframe
 
-[![Build Status](https://travis-ci.org/exoframejs/exoframe-server.svg?branch=master)](https://travis-ci.org/exoframejs/exoframe-server)
-[![Coverage Status](https://coveralls.io/repos/github/exoframejs/exoframe-server/badge.svg?branch=master)](https://coveralls.io/github/exoframejs/exoframe-server?branch=master)
+[![Build Status](https://travis-ci.org/exoframejs/exoframe-faas.svg?branch=master)](https://travis-ci.org/exoframejs/exoframe-faas)
+[![Coverage Status](https://coveralls.io/repos/github/exoframejs/exoframe-faas/badge.svg?branch=master)](https://coveralls.io/github/exoframejs/exoframe-faas?branch=master)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
 Exoframe is a self-hosted tool that allows simple one-command deployments using Docker.
