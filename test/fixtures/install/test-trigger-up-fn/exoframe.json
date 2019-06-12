@@ -1,0 +1,6 @@
+{
+  "name": "test-trigger",
+  "function": {
+    "type": "trigger"
+  }
+}

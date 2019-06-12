@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const rimraf = require('rimraf');
 
+const messageBus = require('./messagebus');
 const runInWorker = require('./worker');
 
 // loaded functions storage
@@ -13,13 +14,16 @@ const rmDir = path => new Promise(resolve => rimraf(path, resolve));
 // basic logging function generator
 const loggerForRoute = route => msg => functions[route].log.push(`${new Date().toISOString()} ${msg}\n`);
 
+// noop cleanup function
+const noopCleanup = async () => {};
+
 exports.listFunctions = ({functionToContainerFormat}) =>
   Object.keys(functions).map(route =>
     functionToContainerFormat({config: functions[route].config, route, type: functions[route].type})
   );
 
 exports.getLogsForFunction = id => {
-  const route = Object.keys(functions).find(route => functions[route].config.name === id);
+  const route = Object.keys(functions).find(route => functions[route].name === id);
   const fn = functions[route];
   if (!fn) {
     return;
@@ -28,16 +32,14 @@ exports.getLogsForFunction = id => {
 };
 
 exports.removeFunction = async ({id, username}) => {
-  const route = Object.keys(functions).find(route => functions[route].config.name === id);
+  const route = Object.keys(functions).find(route => functions[route].name === id);
   const fn = functions[route];
   if (!fn) {
     return false;
   }
 
-  // if running in worker - trigger cleanup
-  if (fn.type === 'worker') {
-    fn.worker.terminate();
-  }
+  // trigger cleanup
+  await fn.cleanup();
 
   // remove from cache
   delete functions[route];
@@ -68,27 +70,62 @@ exports.registerFunction = async ({faasFolder, folder}) => {
 
   // store function in memory
   functions[config.route] = {
+    name: funConfig.name,
     type: config.type,
     route: config.route,
     handler: fun,
     config: funConfig,
     folder: funPath,
     log: [],
+    cleanup: noopCleanup,
   };
+
+  // create function context
+  const context = {meta: functions[config.route], log: loggerForRoute(config.route)};
 
   // we're done if it's http function
   if (config.type === 'http') {
     return;
   }
 
-  // otherwise - execute work based on function
+  // if function is worker type - spawn new worker thread with it
   if (config.type === 'worker') {
-    const worker = runInWorker({meta: functions[config.route], log: loggerForRoute(config.route)});
+    const worker = runInWorker(context);
     functions[config.route].worker = worker;
+    functions[config.route].cleanup = () => worker.terminate();
     return;
   }
 
-  // Unknown function type! Ignoring it..
+  // if function is a trigger - create new event subscription
+  if (config.type === 'trigger') {
+    const triggerName = functions[config.route].name;
+    // create new function that emits trigger event for current function
+    const emitTrigger = data => messageBus.emit(triggerName, data);
+    // instantiate new trigger
+    const triggerCleanup = await functions[config.route].handler(emitTrigger, context);
+    // register new listeren for the trigger
+    const handleTrigger = data => {
+      Object.keys(functions)
+        // find all function of current type
+        .filter(key => functions[key].type === triggerName)
+        // call them with new data
+        .forEach(key => {
+          const localContext = {meta: functions[key], log: loggerForRoute(functions[key].route)};
+          functions[key].handler({data}, localContext);
+        });
+    };
+    messageBus.addListener(triggerName, handleTrigger);
+    functions[config.route].cleanup = async () => {
+      // remove event listener
+      messageBus.removeListener(triggerName, handleTrigger);
+      // call cleanup
+      if (triggerCleanup) {
+        await triggerCleanup();
+      }
+    };
+  }
+
+  // Custom or unknown function type. No need to do anything..
 };
 
 const loadFunctions = faasFolder => {

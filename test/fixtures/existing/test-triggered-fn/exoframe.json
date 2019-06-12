@@ -1,0 +1,6 @@
+{
+  "name": "test-triggered-fn",
+  "function": {
+    "type": "test-trigger"
+  }
+}
