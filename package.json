@@ -1,11 +1,14 @@
 {
   "name": "exoframe-faas",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Simple function deployments for Exoframe",
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage --silent --ci",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
+  },
+  "bin": {
+    "exoframe-faas": "bin/exoframe-faas.js"
   },
   "keywords": [],
   "author": "Tim Ermilov <yamalight@gmail.com> (http://codezen.net)",

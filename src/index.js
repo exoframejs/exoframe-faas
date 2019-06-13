@@ -17,11 +17,16 @@ const loggerForRoute = route => msg => functions[route].log.push(`${new Date().t
 // noop cleanup function
 const noopCleanup = async () => {};
 
+// simple function to fetch all currently loaded functions
+exports.getLoadedFunctions = () => functions;
+
+// converts all loaded functions to list with given formatter
 exports.listFunctions = ({functionToContainerFormat}) =>
   Object.keys(functions).map(route =>
     functionToContainerFormat({config: functions[route].config, route, type: functions[route].type})
   );
 
+// gets an array of logs for given function
 exports.getLogsForFunction = id => {
   const route = Object.keys(functions).find(route => functions[route].name === id);
   const fn = functions[route];
@@ -31,6 +36,7 @@ exports.getLogsForFunction = id => {
   return fn.log;
 };
 
+// removes given function
 exports.removeFunction = async ({id, username}) => {
   const route = Object.keys(functions).find(route => functions[route].name === id);
   const fn = functions[route];
@@ -49,6 +55,7 @@ exports.removeFunction = async ({id, username}) => {
   return true;
 };
 
+// registers new function
 exports.registerFunction = async ({faasFolder, folder}) => {
   // ignore empty current folder reference
   if (!folder || !folder.trim().length) {
@@ -128,6 +135,7 @@ exports.registerFunction = async ({faasFolder, folder}) => {
   // Custom or unknown function type. No need to do anything..
 };
 
+// load all functions from given folder (used on start)
 const loadFunctions = faasFolder => {
   const folders = fs.readdirSync(faasFolder);
   for (const folder of folders) {
@@ -135,6 +143,7 @@ const loadFunctions = faasFolder => {
   }
 };
 
+// loads all current functions and returns fastify middleware
 exports.setup = ({faasFolder}) => {
   // load current functions
   loadFunctions(faasFolder);
