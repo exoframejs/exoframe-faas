@@ -1,6 +1,6 @@
 {
   "name": "exoframe-faas",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Simple function deployments for Exoframe",
   "main": "index.js",
   "scripts": {

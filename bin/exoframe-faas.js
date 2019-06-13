@@ -51,7 +51,8 @@ const loadedFunction = loadedFunctions[Object.keys(loadedFunctions)[0]];
 // if function is http - start fastify
 if (loadedFunction.type === 'http') {
   try {
-    const fastify = require('fastify');
+    const fastifyPath = require.resolve('fastify', {paths: [currentFolder]});
+    const fastify = require(fastifyPath);
     fastify()
       .register(fastifyMiddleware)
       .listen(8080, '0.0.0.0');
