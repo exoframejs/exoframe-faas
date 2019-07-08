@@ -34,7 +34,7 @@ exports.executeTemplate = async ({config, serverConfig, username, tempDockerDir,
     // copy folder to current folder for functions
     const destFolder = path.join(serverConfig.faasFolder, folder);
     util.logger.debug('Copying function from-to:', {faasFolder, destFolder});
-    await fse.move(faasFolder, destFolder);
+    await fse.move(faasFolder, destFolder, {overwrite: true});
     util.logger.debug('Copied function to server..');
 
     // register new function
