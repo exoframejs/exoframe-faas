@@ -58,7 +58,8 @@ if (loadedFunction.type === 'http') {
       .listen(8080, '0.0.0.0');
   } catch (e) {
     console.error('Error! You also need to install fastify to run HTTP functions.');
-    process.exit(1);
+    cleanup();
+    return;
   }
 }
 
