@@ -9,9 +9,9 @@ const log = msg => {
 };
 
 const main = async () => {
-  parentPort.postMessage('Worker starting with:', file);
+  parentPort.postMessage(`Worker starting with: ${file}`);
   const cleanup = await execute(null, {log});
-  parentPort.postMessage('Worker started, cleanup:', cleanup);
+  parentPort.postMessage(`Worker started, cleanup: ${cleanup}`);
 };
 
 main();
