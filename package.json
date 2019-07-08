@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.4",
-    "fastify": "^2.4.1",
+    "fastify": "^2.6.0",
     "get-port": "^5.0.0",
     "jest": "^24.8.0"
   },
